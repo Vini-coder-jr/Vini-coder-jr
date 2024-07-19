@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Kwa Firebase</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f8fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #1da1f2;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px;
+    background-color: #1da1f2;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0e71a1;
+}
+
+a {
+    text-align: center;
+    color: #1da1f2;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Login Now</h2>
+    <form id="signin-form">
+        <label for="email">Email</label>
+        <input type="email" id="signin-email" placeholder="Enter your username" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="signin-password" placeholder="Enter your password" required>
+ 
+        <button type="submit">SignIn</button>
+                <p>Not a member? <a href="index.html">Jisajili Hapa</a></p>
+    </form>
+</div>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js';
+import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js';
+const firebaseConfig = {
+    apiKey: "AIzaSyBL-izKj589SXMYvuKGUJQ939670YwKcOE",
+    authDomain: "frontended-7979d.firebaseapp.com",
+    projectId: "frontended-7979d",
+    storageBucket: "frontended-7979d.appspot.com",
+    messagingSenderId: "822716049617",
+  appId: "1:822716049617:web:06a6aae58e13d435377df0"
+  };
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const database = getDatabase(app);
+
+// Signin Form Event Listener
+const signinForm = document.getElementById('signin-form');
+signinForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('signin-email').value;
+    const password = document.getElementById('signin-password').value;
+
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        console.log('User logged in:', user);
+
+        alert('Welcome! Umefanikiwa Kujiunga Na frontended-test');
+        window.location.replace('dashboard.html');
+    } catch (error) {
+        console.error('Login error:', error.message);
+    }
+});
+</script>
+</body>
+</html>
+
+
+
+
+

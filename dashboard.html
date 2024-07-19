@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Your Social Feed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f8fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            
+
+        }
+
+        h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #1da1f2;
+        }
+
+        .post {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .post img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .post-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .post-text {
+            flex: 1;
+        }
+
+        .post-image {
+            max-width: 100%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>Hi, View Posts</h3>
+<p id="userList"></p>
+        <div class="post">
+            <div class="post-content">
+                <img src="images.jpeg" alt="Profile Picture">
+                <div class="post-text">
+                    <p><strong>@username</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="post">
+            <div class="post-content">
+                <img src="images.jpeg" alt="Profile Picture">
+                    <div class="post-text">
+                        <p><strong>@username</strong> Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="post-content">
+                <img src="images.jpeg" alt="Profile Picture">
+                    <div class="post-text">
+                        <p><strong>@username</strong> Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+            </div>
+
+        </div>
+    </div>
+    <script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js';
+import { getDatabase, ref, set, child, get } from 'https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js';
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBL-izKj589SXMYvuKGUJQ939670YwKcOE",
+    authDomain: "frontended-7979d.firebaseapp.com",
+    projectId: "frontended-7979d",
+    storageBucket: "frontended-7979d.appspot.com",
+    messagingSenderId: "822716049617",
+  appId: "1:822716049617:web:06a6aae58e13d435377df0"
+  };
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const database = getDatabase(app);
+
+// Function to fetch user email and phone number by user ID
+async function getUserDataById(userId) {
+    const userRef = ref(database, 'users/' + userId);
+    const userSnapshot = await get(userRef);
+
+    if (userSnapshot.exists()) {
+        const userData = userSnapshot.val();
+        const userEmail = userData.email;
+        const userPhone = userData.phone;
+
+        return { userId, email: userEmail, phone: userPhone };
+    } else {
+        throw new Error('User with ID ' + userId + ' not found');
+    }
+}
+
+// Function to fetch and display information for all users
+async function displayAllUserInformation() {
+    const usersRef = ref(database, 'users');
+    const usersSnapshot = await get(usersRef);
+
+    if (usersSnapshot.exists()) {
+        usersSnapshot.forEach((user) => {
+            const userId = user.key;
+            getUserDataById(userId)
+                .then((userData) => {
+                    console.log('User Data:', userData);
+
+                    // Update the DOM with user information
+                    const userInfoElement = document.createElement('div');
+                    userInfoElement.textContent = `UserID: ${userData.userId}, Email: ${userData.email}, Phone: ${userData.phone}`;
+                    document.getElementById('userList').appendChild(userInfoElement);
+                })
+                .catch((error) => {
+                    console.error('Error fetching user data:', error.message);
+                });
+        });
+    } else {
+        console.error('No users found in the database');
+    }
+}
+
+// Call the displayAllUserInformation function to fetch and display information for all users
+displayAllUserInformation();
+getUserInfo();
+</script>
+</body>
+</html>
+
+
+

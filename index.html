@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Firebase</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f8fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #1da1f2;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px;
+    background-color: #1da1f2;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0e71a1;
+}
+
+a {
+    text-align: center;
+    color: #1da1f2;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Jisajili Sasa</h2>
+    <form id="signup-form">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Enter your email" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password" required>
+<label for="number">Phone Number</label>
+        <input type="number" id="phone" placeholder="Enter Namba Ya Simu" required>
+        <button type="submit">Sign Up Sasa</button>
+        <p>Already a member? <a href="signin.html">Ingia Hapa</a></p>
+    </form>
+   
+</div>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js';
+import { getAuth, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js';
+import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js';
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBL-izKj589SXMYvuKGUJQ939670YwKcOE",
+    authDomain: "frontended-7979d.firebaseapp.com",
+    projectId: "frontended-7979d",
+    storageBucket: "frontended-7979d.appspot.com",
+    messagingSenderId: "822716049617",
+  appId: "1:822716049617:web:06a6aae58e13d435377df0"
+  };
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const database = getDatabase(app);
+
+const signupForm = document.getElementById('signup-form');
+signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value; // Use email field value directly
+    const password = document.getElementById('password').value;
+    const phone = document.getElementById('phone').value;
+
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        console.log('User signed up:', user);
+
+        const userData = {
+            email: user.email,
+            phone: phone,
+            createdAt: new Date().toISOString()
+        };
+
+        await set(ref(database, 'users/' + user.uid), userData);
+        console.log('User data stored in database');
+
+        alert('Redirecting... Please sign in to proceed.');
+        window.location.replace('signin.html');
+    } catch (error) {
+        console.error('Signup error:', error.message);
+    }
+});
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
